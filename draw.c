@@ -46,8 +46,13 @@ void draw_polygons( struct matrix *polygons, screen s, color c ) {
   while (i<polygons->lastcol) {
 
     draw_line(polygons->m[0][i],polygons->m[1][i],
-	      polygons->m[0][i+1],polygons->m[1][i+1],
-	      polygons->m[0][i+2],polygons->m[1][i+2]);
+	      polygons->m[0][i+1],polygons->m[1][i+1],s,c);
+    draw_line(polygons->m[0][i+2],polygons->m[1][i+2],
+	      polygons->m[0][i],polygons->m[1][i],s,c);
+    draw_line(polygons->m[0][i+1],polygons->m[1][i+1],
+	      polygons->m[0][i+2],polygons->m[1][i+2],s,c);
+	      
+	      
     i+=3;
   }
 }
@@ -82,9 +87,10 @@ void add_box( struct matrix * edges,
   
   //front
   add_polygon(edges,x0,y0,z0,x1,y1,z0,x1,y0,z0);
+  //printf("add_box: %lf %lf %lf %lf %lf %lf %lf %lf %lf\n",x0,y0,z0,x1,y0,z0,x1,y0,z0);
   add_polygon(edges,x0,y0,z0,x0,y1,z0,x1,y1,z0);
 
-
+  
   //back
   add_polygon(edges,x0,y0,z1,x1,y0,z1,x0,y1,z1);
   add_polygon(edges,x1,y1,z1,x0,y1,z1,x1,y0,z1);
@@ -103,7 +109,7 @@ void add_box( struct matrix * edges,
 
   //side-left
   add_polygon(edges,x0,y1,z0,x0,y0,z0,x0,y0,z1);
-  add_polygon(edges,x0,y0,z1,x0,y1,z1,x0,y1,z0);x
+  add_polygon(edges,x0,y0,z1,x0,y1,z1,x0,y1,z0);
   
 }
 
@@ -128,31 +134,51 @@ void add_sphere( struct matrix * edges,
                  double r, int step ) {
 
   struct matrix *points = generate_sphere(cx, cy, cz, r, step);
-  int index, lat, longt;
+  int curr_index, next_index, lat, longt;
   int latStop, longStop, latStart, longStart;
   latStart = 0;
-  latStop = step;
-  longStart = 0;
-  longStop = step;
+  latStop = step;//step
+  longStart = 0;//0
+  longStop = step;//step
 
   step++;
   for ( lat = latStart; lat < latStop; lat++ ) {
     for ( longt = longStart; longt <= longStop; longt++ ) {
 
-      curr_index = lat * (step) + longt;//lat*step bc circle has that many points
-      next_index = (lat+1)*step+longt;
+      if (lat==latStop-1) //if last time around
+	{
+	  curr_index = lat * (step) + longt;//lat*step bc circle has that many points
+	  next_index=longt;
+	}
+      else {
+      
+	curr_index = lat * (step) + longt;//lat*step bc circle has that many points
+	next_index = (lat+1)*step+longt;
+      }
       
       add_polygon(edges, points->m[0][curr_index],
 		  points->m[1][curr_index],
 		  points->m[2][curr_index],
+		  points->m[0][curr_index+1],
+		  points->m[1][curr_index+1],
+		  points->m[2][curr_index+1],
 		  points->m[0][next_index],
 		  points->m[1][next_index],
-		  points->m[2][next_index],
-		  points->m[0][curr_index+1],
-					  
+		  points->m[2][next_index]);
+		  
+      if (longt!=0 && longt!=longStop) 
+	add_polygon(edges, points->m[0][next_index],
+		    points->m[1][next_index],
+		    points->m[2][next_index],
+		    points->m[0][curr_index+1],
+		    points->m[1][curr_index+1],
+		    points->m[2][curr_index+1],
+		    points->m[0][next_index+1],
+		    points->m[1][next_index+1],
+		    points->m[2][next_index+1]);
 
-      /*
-      add_edge( edges, points->m[0][index],
+      
+      /*add_edge( edges, points->m[0][index],
                 points->m[1][index],
                 points->m[2][index],
                 points->m[0][index] + 1,
