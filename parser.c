@@ -125,7 +125,7 @@ void parse_file ( char * filename,
 
       sscanf(line, "%lf %lf %lf %lf %lf",
              xvals, yvals, zvals, &r, &r1);
-      add_torus( edges, xvals[0], yvals[0], zvals[0], r, r1, step_3d);
+      add_torus(polygons, xvals[0], yvals[0], zvals[0], r, r1, step_3d);
     }//end of torus
 
     else if ( strncmp(line, "circle", strlen(line)) == 0 ) {
