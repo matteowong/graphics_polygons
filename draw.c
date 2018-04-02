@@ -52,7 +52,7 @@ void draw_polygons( struct matrix *polygons, screen s, color c ) {
     int By=polygons->m[1][i+1]-polygons->m[1][i];
 
 
-    //if (Ax*By-Ay*Bx>0) {
+    if (Ax*By-Ay*Bx>0) {
     
     draw_line(polygons->m[0][i],polygons->m[1][i],
 	      polygons->m[0][i+1],polygons->m[1][i+1],s,c);
@@ -61,7 +61,7 @@ void draw_polygons( struct matrix *polygons, screen s, color c ) {
     draw_line(polygons->m[0][i+1],polygons->m[1][i+1],
 	      polygons->m[0][i+2],polygons->m[1][i+2],s,c);
  
-    //}     
+    }     
 	      
     i+=3;
   }
@@ -153,9 +153,9 @@ void add_sphere( struct matrix * edges,
 
   step++;
   for ( lat = latStart; lat < latStop; lat++ ) {
-    for ( longt = longStart; longt <= longStop; longt++ ) {
+    for ( longt = longStart; longt < longStop; longt++ ) {
 
-      if (lat==latStop-1) //if last time around
+      if (lat==step-2) //if last time around
 	{
 	  curr_index = lat * (step) + longt;//lat*step bc circle has that many points
 	  next_index=longt;
@@ -165,6 +165,33 @@ void add_sphere( struct matrix * edges,
 	curr_index = lat * (step) + longt;//lat*step bc circle has that many points
 	next_index = (lat+1)*step+longt;
       }
+
+      if (longt==0) {
+	add_polygon(edges, points->m[0][curr_index],
+		    points->m[1][curr_index],
+		    points->m[2][curr_index],
+		    points->m[0][curr_index+1],
+		    points->m[1][curr_index+1],
+		    points->m[2][curr_index+1],
+		    points->m[0][next_index+1],
+		    points->m[1][next_index+1],
+		    points->m[2][next_index+1]);
+
+		    
+      } else if (longt==step-2) {
+	add_polygon(edges, points->m[0][curr_index],
+		    points->m[1][curr_index],
+		    points->m[2][curr_index],
+		    points->m[0][curr_index+1],
+		    points->m[1][curr_index+1],
+		    points->m[2][curr_index+1],
+		    points->m[0][next_index],
+		    points->m[1][next_index],
+		    points->m[2][next_index]);
+
+      }
+
+      else {
       
       add_polygon(edges, points->m[0][curr_index],
 		  points->m[1][curr_index],
@@ -175,7 +202,7 @@ void add_sphere( struct matrix * edges,
 		  points->m[0][next_index],
 		  points->m[1][next_index],
 		  points->m[2][next_index]);
-      if (longt>0 && longt<longStop) {		  
+      //if (longt>0 && longt<step) {		  
       
 	add_polygon(edges, points->m[0][next_index],
 		    points->m[1][next_index],
@@ -187,6 +214,7 @@ void add_sphere( struct matrix * edges,
 		    points->m[1][next_index+1],
 		    points->m[2][next_index+1]);
       }
+	//}
       
       
       /*add_edge( edges, points->m[0][index],
