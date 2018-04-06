@@ -247,7 +247,7 @@ void parse_file ( char * filename,
       //printf("SAVE\t%s\n", line);
       clear_screen(s);
       draw_lines(edges, s, c);
-      draw_polygons(edges, s, c);
+      draw_polygons(polygons, s, c);
       save_extension(s, line);
     }//end save
     

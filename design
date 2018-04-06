@@ -1,0 +1,25 @@
+ident
+sphere
+120 -100 0 50
+sphere
+-120 -155 0 80
+box
+-20 50 0 40 300 40
+box
+-100 -250 0 200 40 40
+torus
+0 -270 0 20 150
+line
+-20 50 -20 -120 -75 0
+line
+20 50 -20 120 -50 0
+rotate
+x 20
+rotate
+y 20
+move
+250 350 0
+apply
+display
+save
+design.png
