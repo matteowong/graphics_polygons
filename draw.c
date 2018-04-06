@@ -46,13 +46,13 @@ void draw_polygons( struct matrix *polygons, screen s, color c ) {
   while (i<polygons->lastcol) {
 
     //AxBy-AyBx
-    int Ax=polygons->m[0][i+2]-polygons->m[0][i];
-    int Ay=polygons->m[1][i+2]-polygons->m[1][i];
-    int Bx=polygons->m[0][i+1]-polygons->m[0][i];
-    int By=polygons->m[1][i+1]-polygons->m[1][i];
+    int Ax=polygons->m[0][i+1]-polygons->m[0][i];
+    int Ay=polygons->m[1][i+1]-polygons->m[1][i];
+    int Bx=polygons->m[0][i+2]-polygons->m[0][i];
+    int By=polygons->m[1][i+2]-polygons->m[1][i];
 
 
-    if (Ax*By-Ay*Bx<0) {
+    if (Ax*By-Ay*Bx>0) {
     
     draw_line(polygons->m[0][i],polygons->m[1][i],
 	      polygons->m[0][i+1],polygons->m[1][i+1],s,c);
