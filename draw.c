@@ -52,7 +52,7 @@ void draw_polygons( struct matrix *polygons, screen s, color c ) {
     int By=polygons->m[1][i+1]-polygons->m[1][i];
 
 
-    if (Ax*By-Ay*Bx>0) {
+    if (Ax*By-Ay*Bx<0) {
     
     draw_line(polygons->m[0][i],polygons->m[1][i],
 	      polygons->m[0][i+1],polygons->m[1][i+1],s,c);
